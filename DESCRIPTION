@@ -1,12 +1,20 @@
 Package: MLASZdaneAdm3
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Type: Package
+Title: Pakiet zawierający funkcje potrzebne do obliczania zbioru wskaźników w
+    projekcie MLASZ - dla 3. edycji monitoringu z użyciem danych rejestrowych
+Version: 0.1.0
+Authors@R: c(person("Bartłomiej", "Płatkowski", email = "b.platkowski@ibe.edu.pl", role = c("cre", "aut")),
+             person("Tomasz", "Żółtak", email = "tomek@zozlak.org", role = "ctb"))
+Description: Pakiet zawiera funkcje potrzebne do obliczania wskaźników
+    zagregowanych dla 2. edycji monitoringu z użyciem danych rejestrowych.
+    Użycie tych funkcji w celu obliczania wskaźników wymaga użycia pakietu
+    MLASZdane zawierającego silnik agregacji.
 License: MIT + file LICENSE
+Depends:
+    R (>= 4.2.1),
+    MLASZdane (>= 0.4.1)
 Encoding: UTF-8
+VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Suggests: 

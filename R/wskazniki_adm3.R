@@ -61,42 +61,6 @@ l_abs_zrodla = function(x) {
     return()
 }
 #' @title Obliczanie wskaźników dla 3. edycji monitoringu - dane administracyjne
-#' @description Funkcja oblicza i przechowuje odmiany wyrażeń tekstowych, które
-#' zostaną użyte w raportach.
-#' @param x ramka danych pośrednich P4
-#' @return lista
-#' @importFrom dplyr %>% case_when
-#' @export
-odmiany = function(x) {
-  list(
-    abs = ifelse(x$l_abs[[1]] %in% 1, " absolwenta", " absolwentów"),
-    kob = if (x$l_kobiet[[1]] %in% 0:19) {
-      case_when(
-        x$l_kobiet[[1]] %in% 0 ~ "kobiet",
-        x$l_kobiet[[1]] %in% 1 ~ "kobietę",
-        x$l_kobiet[[1]] %in% c(2:4) ~ "kobiety",
-        x$l_kobiet[[1]] %in% c(5:19) ~ "kobiet")
-    } else {
-      case_when(
-        (x$l_kobiet[[1]] %% 10) %in% c(0, 1, 5:9) ~ "kobiet",
-        (x$l_kobiet[[1]] %% 10) %in% c(2:4) ~ "kobiety")
-    },
-    abs_opi = ifelse(x$l_abs_zrodla[[1]]$n_opi %in% 1, " absolwenta", " absolwentów"),
-    abs_zus = ifelse(x$l_abs_zrodla[[1]]$n_zus %in% 1, " absolwenta", " absolwentów"),
-    osob_zus = if (x$l_abs_zrodla[[1]]$n_zus[[1]] %in% 0:19) {
-      case_when(
-        x$l_abs_zrodla[[1]]$n_zus %in% 0 ~ " osób",
-        x$l_abs_zrodla[[1]]$n_zus %in% 1 ~ " osoba",
-        x$l_abs_zrodla[[1]]$n_zus %in% c(2:4) ~ " osoby",
-        x$l_abs_zrodla[[1]]$n_zus %in% c(5:19) ~ " osób")
-    } else {
-      case_when(
-        (x$l_abs_zrodla[[1]]$n_zus %% 10) %in% c(0, 1, 5:9) ~ " osoby",
-        (x$l_abs_zrodla[[1]]$n_zus %% 10) %in% c(2:4) ~ " osób")
-    }
-  )
-}
-#' @title Obliczanie wskaźników dla 3. edycji monitoringu - dane administracyjne
 #' @description Funkcja licząca odsetek absolwentów o danym statusie
 #' edukacyjno-zawodowym (wskaźnik S3) w danym miesiącu \code{mies} dla raportu
 #' dla danego roku \code{rok}. Wyróżniamy następujące statusy (bez KUZ i KKZ):
@@ -116,9 +80,9 @@ odmiany = function(x) {
 #' @export
 S3_mies = function(x, rok_od, mies_od, rok_do, mies_do) {
   stopifnot(is.data.frame(x),
-            rok_od %in% c(2020, 2021),
+            rok_od %in% c(2021, 2022),
             mies_od %in% c(1:12),
-            rok_do %in% c(2020, 2021),
+            rok_do %in% c(2021, 2022),
             mies_do %in% c(1:12))
   
   l_od = data_na_okres(rok = rok_od, mies = mies_od)
@@ -155,12 +119,12 @@ S3_mies = function(x, rok_od, mies_od, rok_do, mies_do) {
 zawody_S3 = function(x, rok_od, mies_od, rok_do, mies_do) {
   stopifnot(is.data.frame(x),
             "nazwa_zaw" %in% names(x),
-            rok_od %in% c(2020, 2021),
+            rok_od %in% c(2021, 2022),
             mies_od %in% c(1:12),
-            rok_do %in% c(2020, 2021),
+            rok_do %in% c(2021, 2022),
             mies_do %in% c(1:12))
   
-  if (any(unique(x$typ_szk) %in% c("Branżowa szkoła I stopnia", "Technikum", "Szkoła policealna"))) {
+  if (any(unique(x$typ_szk) %in% c("Branżowa szkoła I stopnia", "Technikum", "Szkoła policealna", "Branżowa szkoła II stopnia"))) {
     tab = x %>%
       group_by(.data$nazwa_zaw) %>%
       S3_mies(rok_od, mies_od, rok_do, mies_do) %>%
@@ -196,7 +160,7 @@ zawody_S3 = function(x, rok_od, mies_od, rok_do, mies_do) {
 #' @export
 E2_nauka_kontyn = function(x, rok, mies = 12) {
   stopifnot(is.data.frame(x),
-            rok %in% c(2020, 2021),
+            rok %in% c(2021, 2022),
             mies %in% c(1:12))
   
   x = x %>%
@@ -243,8 +207,8 @@ E2_nauka_kontyn = function(x, rok, mies = 12) {
 #' @export
 Z4_ods_prac_mies = function(x, rok_od, mies_od = 9, rok_do, mies_do = 12, nauka) {
   stopifnot(is.data.frame(x),
-            rok_od %in% c(2020, 2021),
-            rok_do %in% c(2020, 2021),
+            rok_od %in% c(2021, 2022),
+            rok_do %in% c(2021, 2022),
             mies_od %in% c(1:12),
             mies_do %in% c(1:12),
             is.logical(nauka))
@@ -341,7 +305,7 @@ Z4_ods_prac_mies = function(x, rok_od, mies_od = 9, rok_do, mies_do = 12, nauka)
 #' @export
 Z8_formy_prac_mies = function(x, rok, mies = 12, nauka) {
   stopifnot(is.data.frame(x),
-            rok %in% c(2020, 2021),
+            rok %in% c(2021, 2022),
             mies %in% c(1:12),
             is.logical(nauka))
   
@@ -419,7 +383,7 @@ Z8_formy_prac_mies = function(x, rok, mies = 12, nauka) {
 #' @export
 Z9_kont_mlod = function(x, rok, mies = 9, nauka) {
   stopifnot(is.data.frame(x),
-            rok %in% c(2020, 2021),
+            rok %in% c(2021, 2022),
             mies %in% c(1:12),
             is.logical(nauka))
   
@@ -492,7 +456,7 @@ Z9_kont_mlod = function(x, rok, mies = 9, nauka) {
 #' @export
 W3_sr_doch_uop = function(x, rok, od = 9, do = 12, nauka) {
   stopifnot(is.data.frame(x),
-            rok %in% c(2020, 2021),
+            rok %in% c(2021, 2022),
             od %in% c(1:12),
             do %in% c(1:12),
             is.logical(nauka))
@@ -505,10 +469,16 @@ W3_sr_doch_uop = function(x, rok, od = 9, do = 12, nauka) {
   
   if (nrow(x) > 0) {
     if (nauka) {
-      x %>%
+      x = x %>%
         filter((.data$nauka2 %in% 1 | .data$nauka_szk_abs %in% 1) & !is.na(.data$wynagrodzenie_uop) & !is.na(.data$powiat_sr_wynagrodzenie),
                .data$wynagrodzenie_uop > 0,
-               .data$powiat_sr_wynagrodzenie > 0) %>%
+               .data$powiat_sr_wynagrodzenie > 0)
+      
+      dol = quantile(x$wynagrodzenie_uop, 0.01)
+      gora = quantile(x$wynagrodzenie_uop, 0.99)
+      
+      x %>%
+        filter(.data$wynagrodzenie_uop > dol & .data$wynagrodzenie_uop < gora) %>% 
         group_by(.data$id_abs, .data$okres) %>%
         summarise(
           rel_sred_ind_mies = .data$wynagrodzenie_uop / .data$powiat_sr_wynagrodzenie
@@ -530,11 +500,17 @@ W3_sr_doch_uop = function(x, rok, od = 9, do = 12, nauka) {
         as.list() %>%
         return()
     } else {
-      x %>%
+      x = x %>%
         filter(.data$nauka2 %in% 0 & !is.na(.data$wynagrodzenie_uop) & !is.na(.data$powiat_sr_wynagrodzenie),
                .data$wynagrodzenie_uop > 0,
                .data$powiat_sr_wynagrodzenie > 0) %>%
-        group_by(.data$id_abs, .data$okres) %>%
+        group_by(.data$id_abs, .data$okres)
+      
+      dol = quantile(x$wynagrodzenie_uop, 0.01)
+      gora = quantile(x$wynagrodzenie_uop, 0.99)
+      
+      x %>%
+        filter(.data$wynagrodzenie_uop > dol & .data$wynagrodzenie_uop < gora) %>% 
         summarise(
           rel_sred_ind_mies = .data$wynagrodzenie_uop / .data$powiat_sr_wynagrodzenie
         ) %>%
@@ -574,7 +550,7 @@ W3_sr_doch_uop = function(x, rok, od = 9, do = 12, nauka) {
 #' @export
 B2_ods_bezrob = function(x, rok, od = 9, do = 12) {
   stopifnot(is.data.frame(x),
-            rok %in% c(2020, 2021),
+            rok %in% c(2021, 2022),
             od %in% c(1:12),
             do %in% c(1:12))
   
@@ -691,7 +667,7 @@ liczebnosc_branze_ucz = function(x) {
 liczebnosc_branze_kont = function(x, branza_kont_df, rok, mies = 12) {
   stopifnot(is.data.frame(x),
             is.data.frame(branza_kont_df),
-            rok %in% c(2020, 2021),
+            rok %in% c(2021, 2022),
             mies %in% c(1:12))
   
   if (any(unique(x$typ_szk) %in% "Branżowa szkoła I stopnia")) {
@@ -734,10 +710,10 @@ liczebnosc_branze_kont = function(x, branza_kont_df, rok, mies = 12) {
 liczebnosc_dziedziny = function(x, dziedzina_kont_df, rok, mies = 12) {
   stopifnot(is.data.frame(x),
             is.data.frame(dziedzina_kont_df),
-            rok %in% c(2020, 2021),
+            rok %in% c(2021, 2022),
             mies %in% c(1:12))
   
-  if (any(unique(x$typ_szk) %in% c("Technikum", "Liceum ogólnokształcące"))) {
+  if (any(unique(x$typ_szk) %in% c("Technikum", "Liceum ogólnokształcące", "Branżowa szkoła II stopnia"))) {
     
     dziedzina_kont_df = dziedzina_kont_df %>%
       select(id_abs, rok_abs, dziedzina_kont)
@@ -787,10 +763,10 @@ liczebnosc_dziedziny = function(x, dziedzina_kont_df, rok, mies = 12) {
 liczebnosc_dyscypliny = function(x, dyscyplina_kont_df, rok, mies = 12) {
   stopifnot(is.data.frame(x),
             is.data.frame(dyscyplina_kont_df),
-            rok %in% c(2020, 2021),
+            rok %in% c(2021, 2022),
             mies %in% c(1:12))
   
-  if (any(unique(x$typ_szk) %in% c("Technikum", "Liceum ogólnokształcące"))) {
+  if (any(unique(x$typ_szk) %in% c("Technikum", "Liceum ogólnokształcące", "Branżowa szkoła II stopnia"))) {
     
     dyscyplina_kont_df = dyscyplina_kont_df %>%
       select(id_abs, rok_abs, dyscyplina_wiodaca_kont)
@@ -844,10 +820,10 @@ liczebnosc_dyscypliny = function(x, dyscyplina_kont_df, rok, mies = 12) {
 dyscypliny_zawody = function(x, dyscyplina_kont_df, rok, mies = 12) {
   stopifnot(is.data.frame(x),
             is.data.frame(dyscyplina_kont_df),
-            rok %in% c(2020, 2021),
+            rok %in% c(2021, 2022),
             mies %in% c(1:12))
   
-  if (any(unique(x$typ_szk) %in% c("Technikum", "Szkoła policealna"))) {
+  if (any(unique(x$typ_szk) %in% c("Technikum", "Szkoła policealna", "Branżowa szkoła II stopnia"))) {
     
     dyscyplina_kont_df = dyscyplina_kont_df %>%
       select(id_abs, dyscyplina_wiodaca_kont)
@@ -910,10 +886,10 @@ dyscypliny_zawody = function(x, dyscyplina_kont_df, rok, mies = 12) {
 branze_zawody = function(x, branza_kont_df, rok, mies = 12) {
   stopifnot(is.data.frame(x),
             is.data.frame(branza_kont_df),
-            rok %in% c(2020, 2021),
+            rok %in% c(2021, 2022),
             mies %in% c(1:12))
   
-  if (any(unique(x$typ_szk) %in% c("Technikum", "Branżowa szkoła I stopnia"))) {
+  if (any(unique(x$typ_szk) %in% c("Technikum", "Branżowa szkoła I stopnia", "Branżowa szkoła II stopnia"))) {
     
     branza_kont_df = branza_kont_df %>%
       select(id_abs, branza_kont)
@@ -980,6 +956,64 @@ licz_zawody = function(x) {
       tab %>%
         as.list() %>%
         return()
+    }
+  } else {
+    return(list(n = 0))
+  }
+}
+#' @title Obliczanie wskaźników dla 3. edycji monitoringu - dane administracyjne
+#' @description Funkcja licząca rozkład liczebności absolwentów danej płci
+#' kontynuujących naukę na studiach w podziale na dyscypliny. Wskaźnik liczony
+#' jest tylko dla absolwentów techników i liceów ogólnokształcących.
+#' @param x ramka danych pośrednich P3
+#' @param dyscyplina_kont_df ramka danych zawierająca informację o kontynuowaniu
+#' kształcenia w danej dyscyplinie (tabela danych pośrednich P2 lub zawierająca
+#' analogiczne informacje oraz te same nazwy kolumn co tabela P2)
+#' @param rok rok lub zakres lat osiągnięcia statusu absolwenta
+#' @param mies miesiąc, dla którego ma być policzony wskaźnik - domyślnie jest
+#' to grudzień
+#' @param plec płeć absolwenta przekazana jako wartość tekstowa ("K" lub "M")
+#' @return lista
+#' @importFrom dplyr %>% filter .data count mutate select left_join n_distinct
+#' slice_max
+#' @export
+liczebnosc_dyscypliny_plec = function(x, dyscyplina_kont_df, rok, mies = 12, plec) {
+  stopifnot(is.data.frame(x),
+            is.data.frame(dyscyplina_kont_df),
+            "plec" %in% names(dyscyplina_kont_df),
+            is.character(plec),
+            plec %in% c("K", "M"),
+            rok %in% c(2021, 2022),
+            mies %in% c(1:12))
+  
+  if (any(unique(x$typ_szk) %in% c("Technikum", "Liceum ogólnokształcące", "Branżowa szkoła II stopnia"))) {
+    
+    dyscyplina_kont_df = dyscyplina_kont_df %>%
+      select(id_abs, rok_abs, dyscyplina_wiodaca_kont, plec)
+    
+    x = x %>%
+      filter(.data$okres %in% data_na_okres(mies, rok)) %>%
+      left_join(dyscyplina_kont_df,
+                by = c("id_abs", "rok_abs")) %>%
+      filter(.data$plec %in% plec) %>% 
+      filter(.data$nauka_studia %in% 1) %>%
+      filter(!(is.na(.data$dyscyplina_wiodaca_kont)))
+    
+    if (nrow(x) %in% 0) {
+      return(list(n = 0))
+    } else {
+      n_dist = n_distinct(x$id_abs)
+      
+      tab = x %>%
+        count(.data$dyscyplina_wiodaca_kont) %>%
+        mutate(odsetek = .data$n / n_dist)
+      if (nrow(tab) %in% 0) {
+        return(list(n = 0))
+      } else {
+        tab %>%
+          as.list() %>%
+          return()
+      }
     }
   } else {
     return(list(n = 0))
