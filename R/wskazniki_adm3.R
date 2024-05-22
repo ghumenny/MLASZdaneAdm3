@@ -972,17 +972,17 @@ licz_zawody = function(x) {
 #' @param rok rok lub zakres lat osiągnięcia statusu absolwenta
 #' @param mies miesiąc, dla którego ma być policzony wskaźnik - domyślnie jest
 #' to grudzień
-#' @param plec płeć absolwenta przekazana jako wartość tekstowa ("K" lub "M")
+#' @param plc płeć absolwenta przekazana jako wartość tekstowa ("K" lub "M")
 #' @return lista
 #' @importFrom dplyr %>% filter .data count mutate select left_join n_distinct
 #' slice_max
 #' @export
-liczebnosc_dyscypliny_plec = function(x, dyscyplina_kont_df, rok, mies = 12, plec) {
+liczebnosc_dyscypliny_plec = function(x, dyscyplina_kont_df, rok, mies = 12, plc) {
   stopifnot(is.data.frame(x),
             is.data.frame(dyscyplina_kont_df),
             "plec" %in% names(dyscyplina_kont_df),
-            is.character(plec),
-            plec %in% c("K", "M"),
+            is.character(plc),
+            plc %in% c("K", "M"),
             rok %in% c(2021, 2022),
             mies %in% c(1:12))
   
@@ -995,7 +995,7 @@ liczebnosc_dyscypliny_plec = function(x, dyscyplina_kont_df, rok, mies = 12, ple
       filter(.data$okres %in% data_na_okres(mies, rok)) %>%
       left_join(dyscyplina_kont_df,
                 by = c("id_abs", "rok_abs")) %>%
-      filter(.data$plec %in% plec) %>% 
+      filter(.data$plec %in% plc) %>% 
       filter(.data$nauka_studia %in% 1) %>%
       filter(!(is.na(.data$dyscyplina_wiodaca_kont)))
     

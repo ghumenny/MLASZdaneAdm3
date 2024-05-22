@@ -4,7 +4,7 @@
 \alias{liczebnosc_dyscypliny_plec}
 \title{Obliczanie wskaźników dla 3. edycji monitoringu - dane administracyjne}
 \usage{
-liczebnosc_dyscypliny_plec(x, dyscyplina_kont_df, rok, mies = 12, plec)
+liczebnosc_dyscypliny_plec(x, dyscyplina_kont_df, rok, mies = 12, plc)
 }
 \arguments{
 \item{x}{ramka danych pośrednich P3}
@@ -18,7 +18,7 @@ analogiczne informacje oraz te same nazwy kolumn co tabela P2)}
 \item{mies}{miesiąc, dla którego ma być policzony wskaźnik - domyślnie jest
 to grudzień}
 
-\item{plec}{płeć absolwenta przekazana jako wartość tekstowa ("K" lub "M")}
+\item{plc}{płeć absolwenta przekazana jako wartość tekstowa ("K" lub "M")}
 }
 \value{
 lista
